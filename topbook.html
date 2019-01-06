@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="result_pretty.css">
+</head>
+<body>
+
+<h1> &nbsp   Top 10 books in our library </h1>
+
+<table id="mytable" border="1" cellspacing="3">
+    <tr>
+        <th>Book Name</th>
+        <th>ISBN</th>
+        <th>Author</th>
+        <th>Introduction</th>
+        <th>Publication Date</th>
+        <th>Publisher</th>
+    </tr>
+    <tbody></tbody>
+</table>
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+
+</script>
+
+<script>
+
+    $(function() {
+        console.log( "ready!" );
+        $.ajax({
+            url: "/topbookAPI",
+            success: function( result ) {
+                for (var i in result){
+                    var item = result[i];
+                    $('#mytable > tbody:last').append('<tr>' +
+                        '<td>' + item.BookName + '</td>' +
+                        '<td>' + item.ISBN + '</td>' +
+                        '<td>' + item.Author + '</td>' +
+                        '<td>' + item.Introduction + '</td>' +
+                        '<td>' + item.PublicationDate + '</td>' +
+                        '<td>' + item.Publisher + '</td>';
+               
+                }
+            }
+        });
+    });
+</script>
+
+<h5><a href="/"> return to home </a></h5>
+
+</body>
+</html>

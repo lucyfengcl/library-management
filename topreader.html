@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="result_pretty.css">
+</head>
+<body>
+
+<h1> &nbsp   Top 10 readers in our library </h1>
+
+<table id="mytable" border="1" cellspacing="3">
+    <tr>
+        <th>Student Name</th>
+        <th>Major</th>
+        <th>Total borrowing Times</th>
+    </tr>
+    <tbody></tbody>
+</table>
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+
+</script>
+
+<script>
+
+    $(function() {
+        console.log( "ready!" );
+        $.ajax({
+            url: "/topreaderAPI",
+            success: function( result ) {
+                for (var i in result){
+                    var item = result[i];
+                    $('#mytable > tbody:last').append('<tr>' +
+                        '<td>' + item.StudentName + '</td>' +
+                        '<td>' + item.Major + '</td>' +
+                        '<td>' + item.TotalBorrowingTimes + '</td>' ;
+                       
+                }
+            }
+        });
+    });
+</script>
+
+<h5><a href="/"> return to home </a></h5>
+
+</body>
+</html>
