@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="result_pretty.css">
+</head>
+<body>
+
+<h1> &nbsp   Top 10 books in our library </h1>
+
+<table id="mytable" border="1" cellspacing="3">
+    <tr>
+        <th>Barcode</th>
+        <th>Book Name</th>
+        <th>State</th>
+    </tr>
+    <tbody></tbody>
+</table>
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+
+</script>
+
+<script>
+
+    $(function() {
+        console.log( "ready!" );
+        $.ajax({
+            url: "/returnAPI",
+            success: function( result ) {
+                for (var i in result){
+                    var item = result[i];
+                    $('#mytable > tbody:last').append('<tr>' +
+                        '<td>' + item.Barcode + '</td>' +
+                        '<td>' + item.BookName + '</td>' +
+                        '<td>' + item.State + '</td>' ;
+               
+                }
+            }
+        });
+    });
+</script>
+
+<form action="/returnbookAPI" method="POST">
+<br>
+<input onclick="alert('Changed');" type="submit" value="ReturnBook">
+</form>
+
+
+<h5><a href="/"> return to home </a></h5>
+
+</body>
+</html>
+

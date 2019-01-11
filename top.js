@@ -5,7 +5,7 @@ var connection = mysql.createConnection({
     port     : 3306,
     user     : 'tester',
     password : '1234',
-    database : 'mydb',
+    database : 'library',
 });
 
 connection.connect(); // Connection to MySQL
@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
+var key =1001
 // "node app.js" running on port 3000
 app.listen(3000, function () {
 	console.log('Example app listening on port 3000!');
@@ -30,31 +31,76 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + "/main.html");
 });
 
+app.get('/topbook', function (req, res) {
+	res.sendFile(__dirname + "/topbook.html");
+});
+
+app.get('/topreader', function (req, res) {
+	res.sendFile(__dirname + "/topreader.html");
+});
+
+app.get('/borrowlist', function (req, res) {
+	res.sendFile(__dirname + "/borrowlist.html");
+});
+
+app.get('/returnbook', function (req, res) {
+	res.sendFile(__dirname + "/returnbook.html");
+});
+
+//methods
 
 app.get('/topbookAPI', function (req, res) {
-	connection.query('select * from book  order by BorrowingTimes DESC', function (err, rows) {
+	/*console.log(req.body);*/
+	connection.query('select * from book  order by BorrowingTimes DESC limit 10', function (err, rows) {
 		if (err) throw err;
-		res.send(rows);
+		console.log(rows); 
+		/*res.sendfile(__dirname + "/" +"main.html");*/
 	})
 });
 
 app.get('/topreaderAPI', function (req, res) {
-	var statement= 'select b.StudentName, b.TotalBorrowTimes, s.Major from borrowcard AS b, student AS s where b.SID in (select sid from borrowcard order by BorrowingTimes DESC) and s.SID = b.SID'
+	/*console.log(req.body);*/
+	var statement= 'select StudentName, TotalBorrowingTimes, Major from library.borrowcard, library.student where SID=ID order by TotalBorrowingTimes Desc limit 10;'
 	connection.query(statement, function (err, rows) {
 		if (err) throw err;
-		res.send(rows);
+		/*res.send(rows);*/
+		console.log(rows); 
+		res.sendfile(__dirname + "/" +"main.html");
 	})
 });
 
 
-app.get('/aggregation', function (req, res) {
-    res.sendFile(__dirname + "/aggregation.html");
-});
-
-app.get('/borrowlistAPI', function (req, res) {
-	var statement = 'select bo.BookName from book bo, booklist b1 where b1.CID = '+key+' and b1.ISBN=bo.ISBN'
+app.get('/returnAPI', function (req, res) {
+	/*console.log(req.body);*/
+	var statement = 'select BookName from book b1, borrowrecord b2,booklist b3 where b2.CID = '+key+' and b2.State=0 and b2.BarCode=b3.BarCode and b3.ISBN=b1.ISBN;'
 	connection.query(statement, function (err, rows) {
 		if (err) throw err;
-		res.send(rows);
+		/*res.send(rows);*/
+		console.log(rows); 
+		res.sendfile(__dirname + "/" +"main.html");
+	})
+});
+
+app.post('/returnbookAPI', function (req, res) {
+	/*console.log(req.body);*/
+	var statement = 'update borrowrecord set State=1 , ReturnDate = current_date() where CID='+key+';'
+	connection.query(statement, function (err, rows) {
+		if (err) throw err;
+		/*res.send(rows);*/
+		console.log(rows); 
+		res.sendfile(__dirname + "/" +"main.html");
+	})
+	
+});
+
+
+app.get('/borrowlistAPI', function (req, res) {
+	/*console.log(req.body);*/
+	var statement = 'select BookName from book b1, borrowrecord b2,booklist b3 where b2.CID = '+key+' and b2.BarCode=b3.BarCode and b3.ISBN=b1.ISBN;'
+	connection.query(statement, function (err, rows) {
+		if (err) throw err;
+		/*res.send(rows);*/
+		console.log(rows); 
+		res.sendfile(__dirname + "/" +"main.html");
 	})
 });
